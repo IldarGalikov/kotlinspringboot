@@ -1,0 +1,35 @@
+---
+
+server:
+  context-path: /apis/v1/hello
+  port: 10000
+
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  jackson:
+    date-format: com.fasterxml.jackson.databind.util.ISO8601DateFormat
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+      WRITE_DATES_WITH_ZONE_ID: true
+    deserialization:
+      ADJUST_DATES_TO_CONTEXT_TIME_ZONE: false
+
+  datasource:
+    url: jdbc:h2:mem:~/example-app5
+    username: sa
+    password: sa
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    generate-ddl: true
+
+logging:
+  level:
+    root: INFO
+  org.hibernate: INFO
+
