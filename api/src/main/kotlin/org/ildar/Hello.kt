@@ -21,16 +21,16 @@ fun main(args: Array<String>) {
 
 @RestController
 @RequestMapping("/hello")
-class HelloKotlinController(@Autowired val worldRepository: WorldRepository
+class HelloKotlinController(@Autowired val helloRespository: HelloRespository
 ) {
     @RequestMapping(method = [(RequestMethod.GET)])
     @ResponseBody
-    fun getHello() = worldRepository.findAll()
+    fun getHello() = helloRespository.findAll()
 
     @RequestMapping(method = [(RequestMethod.POST)])
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    fun createWorld(@RequestBody request: HelloResponse) = worldRepository.saveAndFlush(request);
+    fun createWorld(@RequestBody request: HelloResponse) = helloRespository.saveAndFlush(request);
 
 }
 
@@ -42,7 +42,6 @@ data class HelloResponse(
         var id: Long = 0
 )
 
-
-interface WorldRepository : JpaRepository<HelloResponse, Long>
+interface HelloRespository : JpaRepository<HelloResponse, Long>
 
 
