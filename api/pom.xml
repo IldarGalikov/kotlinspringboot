@@ -10,6 +10,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>hello-api</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
     <dependencies>
         <dependency>
             <groupId>com.willowtreeapps.assertk</groupId>
@@ -21,15 +24,18 @@
         <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
         <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
         <plugins>
+            <!--standard spring boot plugin that build/runs/deploys spring boot application-->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <!--Plugin that compiles kotlin code into bytecode that runs on Java Virutal Machine-->
             <plugin>
                 <artifactId>kotlin-maven-plugin</artifactId>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <version>${kotlin.version}</version>
                 <configuration>
+                    <!-- configuration for plugin-->
                     <compilerPlugins>
                         <plugin>spring</plugin>
                         <plugin>jpa</plugin>
@@ -53,11 +59,18 @@
                     </execution>
                 </executions>
                 <dependencies>
+                    <!-- Spring boot extends classes annotated with @RestController @Component etc classes.
+                    However by default kotlin classes are final ( could not be extended). There are two solutions :
+                    * define each component/RestController as "open" class
+                    * use this plugin that makes classes annotated with this type of annotation open seamlessly-->
                     <dependency>
                         <groupId>org.jetbrains.kotlin</groupId>
                         <artifactId>kotlin-maven-allopen</artifactId>
                         <version>${kotlin.version}</version>
                     </dependency>
+                    <!-- By default spring boot JPA requires each class to have empty constructor.
+                    This would have polluted entity class. This plugin would generate empty constructor for each class
+                    Annotated with @Entity -->
                     <dependency>
                         <groupId>org.jetbrains.kotlin</groupId>
                         <artifactId>kotlin-maven-noarg</artifactId>

@@ -23,6 +23,8 @@ fun main(args: Array<String>) {
 @RequestMapping("/hello")
 class HelloKotlinController(@Autowired val helloRespository: HelloRespository
 ) {
+
+
     @RequestMapping(method = [(RequestMethod.GET)])
     @ResponseBody
     fun getHello() = helloRespository.findAll()
@@ -43,5 +45,3 @@ data class HelloResponse(
 )
 
 interface HelloRespository : JpaRepository<HelloResponse, Long>
-
-

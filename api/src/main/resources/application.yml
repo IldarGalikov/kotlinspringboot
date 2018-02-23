@@ -1,5 +1,4 @@
 ---
-
 server:
   context-path: /apis/v1
   port: 10001

@@ -18,7 +18,7 @@ spring:
       ADJUST_DATES_TO_CONTEXT_TIME_ZONE: false
 
   datasource:
-    url: jdbc:h2:mem:~/example-app5
+    url: jdbc:h2:mem:~/example-app5;DB_CLOSE_ON_EXIT=FALSE
     username: sa
     password: sa
     driver-class-name: org.h2.Driver
