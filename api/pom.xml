@@ -28,6 +28,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                     <layout>MODULE</layout>
+                </configuration>
             </plugin>
             <!--Plugin that compiles kotlin code into bytecode that runs on Java Virutal Machine-->
             <plugin>
