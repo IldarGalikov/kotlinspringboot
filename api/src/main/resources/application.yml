@@ -1,6 +1,8 @@
 ---
+
 server:
-  context-path: /apis/v1
+  servlet:
+    context-path: /apis/v1
   port: 10001
 
 spring:

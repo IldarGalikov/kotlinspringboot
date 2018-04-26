@@ -1,8 +1,9 @@
 ---
 
 server:
-  context-path: /apis/v1/hello
-  port: 10000
+  servlet:
+    context-path: /apis/v1
+  port: 10001
 
 spring:
   h2:

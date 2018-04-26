@@ -1,15 +1,14 @@
 package org.ildar
 
-import assertk.assert
-import assertk.assertions.isEqualTo
-import assertk.assertions.isFalse
+
+import org.assertj.core.api.Assertions.assertThat
 import org.ildar.components.Dummy
 import org.junit.Before
 import org.junit.Test
 
 class HelloTest {
 
-    var classUnderTest = Dummy("")
+    private lateinit var classUnderTest: Dummy
 
     @Before
     fun setup() {
@@ -18,18 +17,14 @@ class HelloTest {
 
     @Test
     fun sampleTest() {
-        assert(false).isFalse()
+        assertThat(true).isTrue()
     }
-
 
     @Test
     fun whenICallGetHello() {
         classUnderTest = Dummy("world")
         classUnderTest.getHello()
-        assert(classUnderTest.getHello())
+        assertThat(classUnderTest.getHello())
                 .isEqualTo("Hello world")
-
-
     }
-
 }

@@ -1,33 +1,72 @@
 package org.ildar.hello.integration
 
 import cucumber.api.java.en.And
+import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
+import io.restassured.RestAssured
+import io.restassured.builder.RequestSpecBuilder
+import io.restassured.http.ContentType
+import io.restassured.response.ExtractableResponse
+import io.restassured.specification.RequestSpecification
+import org.hamcrest.Matchers.contains
 import org.ildar.SpringKotlinHelloWorldApplication
-import org.springframework.boot.context.embedded.LocalServerPort
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.test.context.ContextConfiguration
+import javax.annotation.PostConstruct
+import org.assertj.core.api.Assertions.assertThat
 
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = arrayOf(SpringKotlinHelloWorldApplication::class))
-@ContextConfiguration(classes = arrayOf(SpringKotlinHelloWorldApplication::class))
-
-class HelloEndpointTests{
+@SpringBootTest(
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        classes = [SpringKotlinHelloWorldApplication::class])
+@ContextConfiguration(classes = [SpringKotlinHelloWorldApplication::class])
+class HelloEndpointTests {
+    private val JSON_API_CONTENT_TYPE = "application/vnd.api+json"
 
     @LocalServerPort
-    private var randomServerPort: Int = 0
+    lateinit var randomServerPort: Integer
+    lateinit var requestSpecification: RequestSpecification
+
+    private var response: ExtractableResponse<*>? = null
+
+    @PostConstruct
+    fun setup() {
+        requestSpecification = RequestSpecBuilder()
+                .setContentType(ContentType.fromContentType(JSON_API_CONTENT_TYPE))
+                .setBaseUri("http://localhost:$randomServerPort")
+                .build()
+    }
 
     @When("^a GET request is made to the URI: \"([^\"]*)\"$")
-    fun makeRequest(url: String){
-        println("Hello Cucumber: " + url)
+    fun getFromURL(url: String) {
+        response = RestAssured
+                .given()
+                .log().all()
+                .spec(requestSpecification)
+                .`when`().get(url)
+                .then().extract()
     }
 
-    @Then("^the api returns a (\\d\\d\\d) code$")
-    fun checkResponseStatusCode(code: Int){
-        println("Hello Cucumber: " + code)
+    @Given("I POST to endpoint \"([^\"]*)\"")
+    fun postJSON(uri: String, requestBody: String) {
+        response = RestAssured
+                .given()
+                .spec(requestSpecification)
+                .body(requestBody)
+                .`when`().post(uri)
+                .then().extract()
     }
-    @And("^reponse is correct$")
-    fun responseIsCorrect(){
-        println("it is correct")
+
+    @And("^reponse for JsonSlurper \"([^\"]*)\" returns \"([^\"]*)\"$")
+    fun responseIsCorrect(jsonSlurper: String, value: String) {
+        assertThat(response?.jsonPath()?.get<String>(jsonSlurper)).isEqualTo(value)
+    }
+
+    @And("^the api returns a (\\d+) code$")
+    fun responseStatusIsCorrect(status: Int) {
+        assertThat(response?.statusCode())
+                .isEqualTo(status)
     }
 }
